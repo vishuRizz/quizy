@@ -71,7 +71,7 @@ class Question:
         self.id = str(_id) if _id else None
 
     def to_dict(self):
-        # Exclude '_id' to let MongoDB auto-generate it
+       
         return {
             'quiz_id': self.quiz_id,
             'question_text': self.question_text,
@@ -80,7 +80,7 @@ class Question:
         }
 
     def save_to_db(self):
-        # Save without '_id' and set it after insertion
+        
         question_data = self.to_dict()
         result = mongo.db.questions.insert_one(question_data)
         self.id = str(result.inserted_id)  # Set MongoDB generated id

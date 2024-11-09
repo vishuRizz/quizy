@@ -44,7 +44,7 @@ def add_question(quiz_id):
     
     return jsonify(message="Question added successfully", question_id=question_id), 201
 
-# Route to get all quizzes by a specific teacher
+
 class ObjectIdEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, ObjectId):
@@ -62,27 +62,25 @@ def get_teacher_quizzes():
     data = {'quizzes': [quiz.to_dict() for quiz in quizzes]}
     return Response(json.dumps(data, cls=ObjectIdEncoder), mimetype='application/json')
 
-# Route to get all questions by quiz ID
+
 @main.route('/questions/<quiz_id>', methods=['GET'])
 @jwt_required()
 def get_questions_by_quiz(quiz_id):
     try:
-        # Fetch the quiz by ID
         quiz = Quiz.get_quiz_by_id(quiz_id)
         if not quiz:
             return jsonify(message="Quiz not found"), 404
         
-        # Initialize an empty list for questions
         questions = []
         
-        # Retrieve questions for this quiz, skip any None or invalid question IDs
+      
         for question_id in quiz.questions:
-            if not question_id:  # Skip None or empty IDs
+            if not question_id:  
                 continue
             try:
-                question_id = ObjectId(question_id)  # Ensure it's an ObjectId
+                question_id = ObjectId(question_id) 
             except Exception:
-                continue  # Skip if not a valid ObjectId
+                continue  
             
             question_data = Question.get_question_by_id(question_id)
             if question_data:
