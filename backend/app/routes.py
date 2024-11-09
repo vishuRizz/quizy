@@ -63,23 +63,32 @@ def get_teacher_quizzes():
     return Response(json.dumps(data, cls=ObjectIdEncoder), mimetype='application/json')
 
 # Route to get all questions by quiz ID
-@main.route('/question/<quiz_id>', methods=['GET'])
+@main.route('/questions/<quiz_id>', methods=['GET'])
 @jwt_required()
 def get_questions_by_quiz(quiz_id):
     try:
-        # Fetch quiz by ID
+        # Fetch the quiz by ID
         quiz = Quiz.get_quiz_by_id(quiz_id)
         if not quiz:
             return jsonify(message="Quiz not found"), 404
         
-        # Fetch the questions for this quiz
+        # Initialize an empty list for questions
         questions = []
+        
+        # Retrieve questions for this quiz, skip any None or invalid question IDs
         for question_id in quiz.questions:
+            if not question_id:  # Skip None or empty IDs
+                continue
+            try:
+                question_id = ObjectId(question_id)  # Ensure it's an ObjectId
+            except Exception:
+                continue  # Skip if not a valid ObjectId
+            
             question_data = Question.get_question_by_id(question_id)
             if question_data:
-                question_data.quiz_id = quiz_id  # Assign the quiz_id to the question
                 questions.append(question_data.to_dict())
         
         return jsonify(questions=questions), 200
     except Exception as e:
+        # Return detailed error message for debugging
         return jsonify(message="An error occurred", error=str(e)), 500
