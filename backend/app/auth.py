@@ -16,13 +16,21 @@ def register():
     # Generate an access token for the new user
     access_token = create_access_token(identity={'username': new_user.username, 'role': new_user.role})
     
-    return jsonify(message="User registered successfully", access_token=access_token), 201
+    return jsonify(
+        access_token=access_token,
+        role=new_user.role
+    ), 201
 
 @auth.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
     user = User.find_by_username(data['username'])
-    if user and user['password'] == data['password']: 
+    if user and user['password'] == data['password']:
+        # Generate an access token for the user
         access_token = create_access_token(identity={'username': user['username'], 'role': user['role']})
-        return jsonify(access_token=access_token), 200
+        
+        return jsonify(
+            access_token=access_token,
+            role=user['role']
+        ), 200
     return jsonify(message="Invalid credentials"), 401
