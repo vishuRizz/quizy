@@ -5,6 +5,9 @@ import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
 import About from "./pages/About";
 import Quizes from "./pages/Quizes";
+import StudentDash from "./pages/StudentDash";
+import TeacherDash from "./pages/TeacherDash";
+import Quiz from "./pages/Quiz";
 
 function App() {
 
@@ -15,9 +18,10 @@ function App() {
     <Route path="/login" element={<Signin/>} />
     <Route path="/register" element={<Signup/>} />
     <Route path="/about" element={<About/>} />
-    <Route path="/about" element={<About/>} />
-    <Route path="/teacher-dashboard" element={<About/>} />
+    <Route path="/student-dashboard" element={<StudentDash/>} />
+    <Route path="/teacher-dashboard" element={<TeacherDash/>} />
     <Route path="/all-quizes" element={<Quizes/>} />
+    <Route path="/quiz/:quizId" element={<Quiz/>} />
   </Routes>
     </>
   )
