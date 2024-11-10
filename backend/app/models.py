@@ -61,6 +61,11 @@ class Quiz:
             return Quiz(**quiz)
         return None
 
+    @staticmethod
+    def get_all_quizzes():
+        quizzes = mongo.db.quizzes.find()
+        return [Quiz(**quiz) for quiz in quizzes]
+
 
 class Question:
     def __init__(self, quiz_id, question_text, options, correct_option_index, _id=None):

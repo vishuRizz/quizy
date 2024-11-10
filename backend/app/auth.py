@@ -9,9 +9,14 @@ def register():
     data = request.get_json()
     if User.find_by_username(data['username']):
         return jsonify(message="User already exists"), 409
+    
     new_user = User(data['username'], data['password'], data['role'])
     new_user.save_to_db()
-    return jsonify(message="User registered successfully"), 201
+    
+    # Generate an access token for the new user
+    access_token = create_access_token(identity={'username': new_user.username, 'role': new_user.role})
+    
+    return jsonify(message="User registered successfully", access_token=access_token), 201
 
 @auth.route('/login', methods=['POST'])
 def login():
@@ -21,5 +26,3 @@ def login():
         access_token = create_access_token(identity={'username': user['username'], 'role': user['role']})
         return jsonify(access_token=access_token), 200
     return jsonify(message="Invalid credentials"), 401
-
-

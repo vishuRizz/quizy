@@ -1,4 +1,0 @@
-Flask 
-Flask-PyMongo 
-flask-jwt-extended
-python-dotenv

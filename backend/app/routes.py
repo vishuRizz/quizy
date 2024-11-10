@@ -53,40 +53,46 @@ class ObjectIdEncoder(json.JSONEncoder):
 
 @main.route('/quizzes', methods=['GET'])
 @jwt_required()
-def get_teacher_quizzes():
+def get_all_quizzes():
     user = get_jwt_identity()
-    if user['role'] != 'teacher':
+    # Allow access for both students and teachers
+    if user['role'] not in ['teacher', 'student']:
         return jsonify(message="Unauthorized"), 403
     
-    quizzes = Quiz.get_all_quizzes_by_teacher(user['username'])
+    # Fetch all quizzes if accessed by a student or quizzes by a teacher if accessed by a teacher
+    if user['role'] == 'teacher':
+        quizzes = Quiz.get_all_quizzes_by_teacher(user['username'])
+    else:
+        quizzes = Quiz.get_all_quizzes()  # Assume this fetches all quizzes for students
+    
     data = {'quizzes': [quiz.to_dict() for quiz in quizzes]}
     return Response(json.dumps(data, cls=ObjectIdEncoder), mimetype='application/json')
+
 
 
 @main.route('/questions/<quiz_id>', methods=['GET'])
 @jwt_required()
 def get_questions_by_quiz(quiz_id):
-    try:
-        quiz = Quiz.get_quiz_by_id(quiz_id)
-        if not quiz:
-            return jsonify(message="Quiz not found"), 404
+    user = get_jwt_identity()
+    # Allow access for both students and teachers
+    if user['role'] not in ['teacher', 'student']:
+        return jsonify(message="Unauthorized"), 403
+    
+    quiz = Quiz.get_quiz_by_id(quiz_id)
+    if not quiz:
+        return jsonify(message="Quiz not found"), 404
+    
+    questions = []
+    for question_id in quiz.questions:
+        if not question_id:
+            continue
+        try:
+            question_id = ObjectId(question_id)
+        except Exception:
+            continue
         
-        questions = []
-        
-      
-        for question_id in quiz.questions:
-            if not question_id:  
-                continue
-            try:
-                question_id = ObjectId(question_id) 
-            except Exception:
-                continue  
-            
-            question_data = Question.get_question_by_id(question_id)
-            if question_data:
-                questions.append(question_data.to_dict())
-        
-        return jsonify(questions=questions), 200
-    except Exception as e:
-        # Return detailed error message for debugging
-        return jsonify(message="An error occurred", error=str(e)), 500
+        question_data = Question.get_question_by_id(question_id)
+        if question_data:
+            questions.append(question_data.to_dict())
+    
+    return jsonify(questions=questions), 200
