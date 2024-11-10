@@ -30,7 +30,7 @@ function Signin() {
             <p className="mb-4 text-gray-500">
               Unlock personalized quizzes, earn badges, and compete with friends. Get smarter, one quiz at a time!
             </p>
-            <ul className="space-y-2 text-gray-600 list-disc list-inside">
+            <ul className="space-y-2 flex justify-center text-gray-600 list-disc list-inside">
               <li>Access to exclusive quizzes</li>
               <li>Save your quiz progress</li>
               <li>View your ranking on the leaderboard</li>
