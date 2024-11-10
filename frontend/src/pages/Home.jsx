@@ -4,6 +4,7 @@ import Footer from "../components/Footer";
 import { useNavigate } from "react-router";
 
 function Home() {
+  const role = localStorage.getItem("role");
   const navigate = useNavigate()
   return (
     <div>
@@ -23,11 +24,15 @@ function Home() {
             <div>
               <a
                 onClick={()=>{
-                  navigate("/register")
+                  if (role === "teacher"){
+                    navigate("/teacher-dashboard")
+                  } else if(role === "student"){
+                    navigate("/student-dashboard")
+                  }
                 }}
                 className="px-6 py-3 mr-4 font-semibold text-blue-600 no-underline bg-white rounded-lg cursor-pointer hover:bg-blue-400 hover:text-black"
               >
-                Get Started
+               Dashboard
               </a>
               <a
                 onClick={()=>{

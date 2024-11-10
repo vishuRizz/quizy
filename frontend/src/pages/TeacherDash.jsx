@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
+import { useNavigate } from 'react-router';
 
 const TeacherDash = () => {
+  const navigate = useNavigate()
   const [showQuizForm, setShowQuizForm] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [quizzes, setQuizzes] = useState([]);
+  const length = quizzes.length
   
   const token = localStorage.getItem('token'); 
 
@@ -137,7 +140,7 @@ const TeacherDash = () => {
           </div>
           <div className="p-4 bg-white rounded-lg shadow">
             <h3 className="mb-2 text-lg font-semibold">Quizzes Created</h3>
-            <p className="text-2xl font-bold">15</p>
+            <p className="text-2xl font-bold">{length}</p>
           </div>
           <div className="p-4 bg-white rounded-lg shadow">
             <h3 className="mb-2 text-lg font-semibold">Average Score</h3>
@@ -151,26 +154,31 @@ const TeacherDash = () => {
 
         {/* Additional Content */}
         <section>
-          <h2 className="mb-4 text-2xl font-semibold">Recent Activities</h2>
-          <div className='w-full'>
-           {
-            quizzes.map((quiz) => (
-              <>
-              
-              <div key={quiz._id} className="flex justify-between p-4 mb-4 bg-white rounded-lg shadow">
-                <h3 className="mb-2 text-lg font-semibold">{quiz.title}</h3>
-                <p className="text-gray-600">{quiz.description}</p>
-                <p className="text-gray-600">Total Questions: {quiz.questions.length}</p>
-                <div onClick={()=>{
-                  navigate(`/question-add/${quiz._id}`)
-                }} className='p-4 mb-4 bg-white rounded-lg shadow'>
-                add questions
-              </div>
-              </div>
-              </>
-            ))
-           } 
+          <div className="w-full max-w-5xl mx-auto mt-10">
+      <h1 className="mb-6 text-3xl font-bold text-center text-gray-800">Available Quizzes</h1>
+
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {quizzes.map((quiz) => (
+          <div
+            key={quiz._id}
+            className="flex flex-col justify-between p-6 transition-transform transform bg-white shadow-lg rounded-xl hover:-translate-y-1 hover:shadow-2xl"
+          >
+            <div>
+              <h3 className="mb-3 text-2xl font-semibold text-purple-800">{quiz.title}</h3>
+              <p className="mb-2 text-gray-600">{quiz.description}</p>
+              <p className="text-sm text-gray-500">Total Questions: {quiz.questions.length}</p>
+            </div>
+
+            <button
+              onClick={() => navigate(`/question-add/${quiz._id}`)}
+              className="px-4 py-2 mt-4 font-semibold text-white bg-purple-600 rounded-lg shadow-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            >
+              Add Questions
+            </button>
           </div>
+        ))}
+      </div>
+    </div>
         </section>
       </main>
     </div>
