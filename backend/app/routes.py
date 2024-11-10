@@ -16,17 +16,17 @@ def create_quiz():
     user = get_jwt_identity()
     if user['role'] != 'teacher':
         return jsonify(message="Unauthorized"), 403
+    
     data = request.get_json()
     
     if not all(key in data for key in ('title', 'description')):
         return jsonify(message="Title and description are required"), 400
     
     new_quiz = Quiz(data['title'], data['description'], user['username'])
+    new_quiz.id = str(ObjectId())  # Generate a unique _id for the quiz
     new_quiz.save_to_db()
     quiz_id = new_quiz.id
     return jsonify(message="Quiz created successfully", quiz_id=quiz_id), 201
-
-
 @main.route('/question/<quiz_id>', methods=['POST'])
 @jwt_required()
 def add_question(quiz_id):
