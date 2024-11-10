@@ -23,64 +23,6 @@ const QuizzesPage = () => {
     }
     fetchFunc()
   }, [])
-  // const quizzes = [
-  //   {
-  //     _id: '1',
-  //     title: 'Python Quiz',
-  //     description: 'A quiz covering various general knowledge topics.',
-  //     created_by: "Ananya ma'am",
-  //     questionCount: 10,
-  //     difficulty: 'Medium'
-  //   },
-  //   {
-  //     _id: '2',
-  //     title: 'JavaScript Basics',
-  //     description: 'Test your knowledge on JavaScript basics and syntax.',
-  //     created_by: "Ravi sir",
-  //     questionCount: 15,
-  //     difficulty: 'Easy'
-  //   },
-  //   {
-  //     _id: '3',
-  //     title: 'HTML & CSS Basics',
-  //     description: 'An introductory quiz on HTML and CSS fundamentals.',
-  //     created_by: "Sara ma'am",
-  //     questionCount: 8,
-  //     difficulty: 'Easy'
-  //   },
-  //   {
-  //     _id: '3',
-  //     title: 'HTML & CSS Basics',
-  //     description: 'An introductory quiz on HTML and CSS fundamentals.',
-  //     created_by: "Sara ma'am",
-  //     questionCount: 8,
-  //     difficulty: 'Easy'
-  //   },
-  //   {
-  //     _id: '3',
-  //     title: 'HTML & CSS Basics',
-  //     description: 'An introductory quiz on HTML and CSS fundamentals.',
-  //     created_by: "Sara ma'am",
-  //     questionCount: 8,
-  //     difficulty: 'Easy'
-  //   },
-  //   {
-  //     _id: '3',
-  //     title: 'HTML & CSS Basics',
-  //     description: 'An introductory quiz on HTML and CSS fundamentals.',
-  //     created_by: "Sara ma'am",
-  //     questionCount: 8,
-  //     difficulty: 'Easy'
-  //   },
-  //   {
-  //     _id: '3',
-  //     title: 'HTML & CSS Basics',
-  //     description: 'An introductory quiz on HTML and CSS fundamentals.',
-  //     created_by: "Sara ma'am",
-  //     questionCount: 8,
-  //     difficulty: 'Easy'
-  //   },
-  // ];
 
   return (
     <>
