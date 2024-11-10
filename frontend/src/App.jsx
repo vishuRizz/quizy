@@ -22,6 +22,7 @@ function App() {
     <Route path="/teacher-dashboard" element={<TeacherDash/>} />
     <Route path="/all-quizes" element={<Quizes/>} />
     <Route path="/quiz/:quizId" element={<Quiz/>} />
+    <Route path="/question-add/:quizId" element={<Quiz/>} />
   </Routes>
     </>
   )
