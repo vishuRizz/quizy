@@ -16,7 +16,7 @@ function Navbar() {
             </div>
           </div>
 
-          <div className="hidden space-x-6 ml-28 md:flex">
+          <div className="hidden space-x-6 ml-36 md:flex">
             <a
               href="/"
               className="text-lg text-black no-underline hover:text-purple-500"
@@ -24,8 +24,10 @@ function Navbar() {
               Home
             </a>
             <a
-              href="/quizzes"
-              className="text-lg text-black no-underline hover:text-purple-500"
+              onClick={()=>{
+                navigate("/all-quizes")
+              }}
+              className="text-lg text-black no-underline cursor-pointer hover:text-purple-500"
             >
               Quizzes
             </a>

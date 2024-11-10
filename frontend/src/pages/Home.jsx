@@ -1,8 +1,10 @@
 import React from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { useNavigate } from "react-router";
 
 function Home() {
+  const navigate = useNavigate()
   return (
     <div>
       <div className="sticky top-0 z-50">
@@ -20,14 +22,18 @@ function Home() {
             </p>
             <div>
               <a
-                href="/signup"
-                className="px-6 py-3 mr-4 font-semibold text-blue-600 no-underline bg-white rounded-lg hover:bg-blue-400 hover:text-black"
+                onClick={()=>{
+                  navigate("/register")
+                }}
+                className="px-6 py-3 mr-4 font-semibold text-blue-600 no-underline bg-white rounded-lg cursor-pointer hover:bg-blue-400 hover:text-black"
               >
                 Get Started
               </a>
               <a
-                href="/quizzes"
-                className="px-6 py-3 font-semibold text-white no-underline bg-blue-500 rounded-lg hover:bg-blue-700 hover:text-black"
+                onClick={()=>{
+                  navigate("/all-quizes")
+                }}
+                className="px-6 py-3 font-semibold text-white no-underline bg-blue-500 rounded-lg cursor-pointer hover:bg-blue-700 hover:text-black"
               >
                 Take a Quiz
               </a>
