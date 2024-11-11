@@ -8,6 +8,7 @@ import Quizes from "./pages/Quizes";
 import StudentDash from "./pages/StudentDash";
 import TeacherDash from "./pages/TeacherDash";
 import Quiz from "./pages/Quiz";
+import QuestionAdd from "./pages/QuestonAdd";
 
 function App() {
 
@@ -22,7 +23,7 @@ function App() {
     <Route path="/teacher-dashboard" element={<TeacherDash/>} />
     <Route path="/all-quizes" element={<Quizes/>} />
     <Route path="/quiz/:quizId" element={<Quiz/>} />
-    <Route path="/question-add/:quizId" element={<Quiz/>} />
+    <Route path="/question-add/:quizId" element={<QuestionAdd/>} />
   </Routes>
     </>
   )
