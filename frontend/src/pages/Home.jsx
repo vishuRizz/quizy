@@ -86,8 +86,8 @@ function Home() {
             Join Quizy today and dive into the world of fun and learning!
           </p>
           <a
-            href="/signup"
-            className="px-8 py-4 font-semibold text-blue-600 bg-white rounded-lg hover:bg-gray-200"
+            href="/register"
+            className="px-8 py-4 font-semibold border border-gray-600 text-decoration-none text-blue-600 bg-white rounded-lg hover:bg-gray-200"
           >
             Sign Up Now
           </a>
