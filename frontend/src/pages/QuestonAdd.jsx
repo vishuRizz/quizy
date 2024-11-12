@@ -29,11 +29,12 @@ const QuestionAdd = () => {
     };
 
     try {
-      await axios.post(`http://127.0.0.1:5000/question/${quizId}`, questionData, {
+     const res = await axios.post(`http://127.0.0.1:5000/question/${quizId}`, questionData, {
         headers: {
           Authorization: token,
         }
       });
+      console.log(res.data);
       alert('Question added successfully!');
       navigate(`/teacher-dashboard`);
     } catch (error) {

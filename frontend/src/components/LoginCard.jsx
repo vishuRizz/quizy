@@ -24,9 +24,7 @@ const LoginCard = () => {
         navigate("/teacher-dashboard")
       } else if (role === "student") {
         navigate("/student-dashboard")
-      }
-
-      navigate("/dashboard"); 
+      } 
     } catch (error) {
       console.error(
         "Login failed:",

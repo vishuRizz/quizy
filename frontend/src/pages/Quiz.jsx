@@ -13,6 +13,7 @@ const Quiz = () => {
   const [selectedOptions, setSelectedOptions] = useState({});
   const [score, setScore] = useState(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  console.log(questions)
 
   useEffect(() => {
     if (!token) {
