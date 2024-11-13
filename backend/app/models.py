@@ -8,6 +8,7 @@ class User:
         self.role = role
 
     def save_to_db(self):
+        
         mongo.db.users.insert_one({
             'username': self.username,
             'password': self.password, 
@@ -32,18 +33,18 @@ class Quiz:
             'title': self.title,
             'description': self.description,
             'created_by': self.created_by,
-            'questions': [str(q) for q in self.questions]  # Convert ObjectIds to strings
+            'questions': [str(q) for q in self.questions] 
         }
 
     def save_to_db(self):
         quiz_data = self.to_dict()
-        quiz_data['_id'] = self.id  # Store ObjectId directly in MongoDB
+        quiz_data['_id'] = self.id 
         mongo.db.quizzes.insert_one(quiz_data)
 
     @staticmethod
     def add_question_to_quiz(quiz_id, question_id):
         mongo.db.quizzes.update_one(
-            {'_id': ObjectId(quiz_id)},  # Cast to ObjectId
+            {'_id': ObjectId(quiz_id)}, 
             {'$push': {'questions': ObjectId(question_id)}}
         )
 
@@ -83,7 +84,7 @@ class Question:
 
     def save_to_db(self):
         question_data = self.to_dict()
-        question_data['_id'] = self.id  # Store ObjectId directly in MongoDB
+        question_data['_id'] = self.id  
         mongo.db.questions.insert_one(question_data)
         return str(self.id)
 
@@ -99,3 +100,33 @@ class Question:
                 _id=question_data['_id']
             )
         return None
+
+class AttemptedQuiz:
+    def __init__(self, student_id, quiz_id, score=None, attempted_on=None, _id=None):
+        self.student_id = student_id
+        self.quiz_id = quiz_id
+        self.score = score
+        self.attempted_on = attempted_on
+        self.id = _id if _id else ObjectId()
+
+    def to_dict(self):
+        return {
+            '_id': str(self.id),
+            'student_id': self.student_id,
+            'quiz_id': self.quiz_id,
+            'score': self.score,
+            'attempted_on': self.attempted_on
+        }
+
+    def save_to_db(self):
+        attempt_data = self.to_dict()
+        attempt_data['_id'] = self.id  
+        mongo.db.attempted.insert_one(attempt_data)
+        return str(self.id)
+
+    @staticmethod
+    def find_attempt(student_id, quiz_id):
+        return mongo.db.attempted.find_one({
+            'student_id': student_id,
+            'quiz_id': quiz_id
+        })

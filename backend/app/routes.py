@@ -3,6 +3,9 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from .models import Quiz, Question
 from bson import ObjectId
 import json
+from datetime import datetime
+from .models import AttemptedQuiz
+from . import mongo
 
 main = Blueprint('main', __name__)
 
@@ -40,7 +43,6 @@ def add_question(quiz_id):
     new_question = Question(quiz_id, data['question_text'], data['options'], data['correct_option_index'])
     question_id = new_question.save_to_db()
     
-    # Add the question ID to the quiz's questions array
     Quiz.add_question_to_quiz(quiz_id, question_id)
     
     return jsonify(message="Question added successfully", question_id=str(question_id)), 201
@@ -58,14 +60,48 @@ def get_all_quizzes():
     if user['role'] not in ['teacher', 'student']:
         return jsonify(message="Unauthorized"), 403
     
-    if user['role'] == 'teacher':
-        quizzes = Quiz.get_all_quizzes_by_teacher(user['username'])
-    else:
-        quizzes = Quiz.get_all_quizzes()
-    
-    data = {'quizzes': [quiz.to_dict() for quiz in quizzes]}
-    return Response(json.dumps(data, cls=ObjectIdEncoder), mimetype='application/json')
+    all_quizzes = Quiz.get_all_quizzes()
+    quiz_data = []
 
+    if user['role'] == 'student':
+        attempted_quizzes = mongo.db.attempted.find({'student_id': user['username']})
+        attempted_quiz_ids = {attempt['quiz_id'] for attempt in attempted_quizzes}
+
+        for quiz in all_quizzes:
+            quiz_dict = quiz.to_dict()
+            quiz_dict['attempted'] = str(quiz.id) in attempted_quiz_ids
+            quiz_data.append(quiz_dict)
+    else:
+        quiz_data = [quiz.to_dict() for quiz in all_quizzes]
+
+    return Response(json.dumps({'quizzes': quiz_data}, cls=ObjectIdEncoder), mimetype='application/json')
+
+@main.route('/submit-score', methods=['POST'])
+@jwt_required()
+def submit_score():
+    user = get_jwt_identity()
+    if user['role'] != 'student':
+        return jsonify(message="Unauthorized"), 403
+    
+    data = request.get_json()
+    student_id = user['username']
+    quiz_id = data.get('quiz_id')
+    score = data.get('score')
+    
+    # Validate input
+    if not quiz_id or score is None:
+        return jsonify(message="Quiz ID and score are required"), 400
+
+    # Check if student has already attempted this quiz
+    existing_attempt = AttemptedQuiz.find_attempt(student_id, quiz_id)
+    if existing_attempt:
+        return jsonify(message="Quiz already attempted"), 400
+    
+    # Record the new attempt
+    new_attempt = AttemptedQuiz(student_id=student_id, quiz_id=quiz_id, score=score, attempted_on=datetime.now())
+    new_attempt.save_to_db()
+    
+    return jsonify(message="Score submitted successfully"), 201
 @main.route('/questions/<quiz_id>', methods=['GET'])
 @jwt_required()
 def get_questions_by_quiz(quiz_id):
