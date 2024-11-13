@@ -76,6 +76,7 @@ def get_all_quizzes():
 
     return Response(json.dumps({'quizzes': quiz_data}, cls=ObjectIdEncoder), mimetype='application/json')
 
+
 @main.route('/submit-score', methods=['POST'])
 @jwt_required()
 def submit_score():
@@ -88,20 +89,44 @@ def submit_score():
     quiz_id = data.get('quiz_id')
     score = data.get('score')
     
-    # Validate input
     if not quiz_id or score is None:
         return jsonify(message="Quiz ID and score are required"), 400
 
-    # Check if student has already attempted this quiz
     existing_attempt = AttemptedQuiz.find_attempt(student_id, quiz_id)
     if existing_attempt:
         return jsonify(message="Quiz already attempted"), 400
     
-    # Record the new attempt
-    new_attempt = AttemptedQuiz(student_id=student_id, quiz_id=quiz_id, score=score, attempted_on=datetime.now())
+    new_attempt = AttemptedQuiz(
+        student_id=student_id, 
+        quiz_id=quiz_id, 
+        score=score, 
+        attempted_on=datetime.now(), 
+        attempted=True  
+    )
     new_attempt.save_to_db()
     
     return jsonify(message="Score submitted successfully"), 201
+
+@main.route('/quiz/<quiz_id>/score', methods=['GET'])
+@jwt_required()
+def get_student_score(quiz_id):
+    user = get_jwt_identity()
+    if user['role'] != 'student':
+        return jsonify(message="Unauthorized"), 403
+    
+    student_id = user['username']
+    attempt = AttemptedQuiz.find_attempt(student_id, quiz_id)
+    
+    if not attempt:
+        return jsonify(message="No attempt found for this quiz"), 404
+    
+    return jsonify(
+        score=attempt['score'], 
+        attempted_on=attempt['attempted_on'], 
+        attempted=True
+    ), 200
+    
+    
 @main.route('/questions/<quiz_id>', methods=['GET'])
 @jwt_required()
 def get_questions_by_quiz(quiz_id):

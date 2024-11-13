@@ -17,6 +17,7 @@ class User:
 
     @staticmethod
     def find_by_username(username):
+        
         return mongo.db.users.find_one({'username': username})
 
 class Quiz:
@@ -102,11 +103,12 @@ class Question:
         return None
 
 class AttemptedQuiz:
-    def __init__(self, student_id, quiz_id, score=None, attempted_on=None, _id=None):
+    def __init__(self, student_id, quiz_id, score=None, attempted_on=None, attempted=True, _id=None):
         self.student_id = student_id
         self.quiz_id = quiz_id
         self.score = score
         self.attempted_on = attempted_on
+        self.attempted = attempted 
         self.id = _id if _id else ObjectId()
 
     def to_dict(self):
@@ -115,7 +117,8 @@ class AttemptedQuiz:
             'student_id': self.student_id,
             'quiz_id': self.quiz_id,
             'score': self.score,
-            'attempted_on': self.attempted_on
+            'attempted_on': self.attempted_on,
+            'attempted': self.attempted 
         }
 
     def save_to_db(self):

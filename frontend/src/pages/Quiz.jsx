@@ -13,7 +13,7 @@ const Quiz = () => {
   const [selectedOptions, setSelectedOptions] = useState({});
   const [score, setScore] = useState(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  console.log(questions)
+  // console.log(questions)
 
   useEffect(() => {
     if (!token) {
@@ -47,17 +47,40 @@ const Quiz = () => {
     }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     let calculatedScore = 0;
-
+  
     questions.forEach((question, index) => {
       if (selectedOptions[index] === question.correct_option_index) {
         calculatedScore += 1;
       }
     });
-
+  
     setScore(calculatedScore);
+  
+    try {
+     
+      const response = await axios.post(
+        "http://127.0.0.1:5000/submit-score",
+        { quiz_id: quizId, score: calculatedScore },
+        { headers: { Authorization: token } }
+      );
+  
+      if (response.status === 201) {
+        alert("Score submitted successfully");
+        navigate(`/score/${quizId}`);
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 400) {
+        alert("Quiz already attempted");
+        navigate(`/score/${quizId}`);
+      } else {
+        console.error("Error submitting score:", error);
+        alert("An error occurred while submitting your score");
+      }
+    }
   };
+  
 
   const handleNext = () => {
     if (currentQuestionIndex < questions.length - 1) {
