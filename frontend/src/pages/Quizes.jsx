@@ -25,7 +25,6 @@ const QuizzesPage = () => {
             Authorization: token,
           },
         });
-        // console.log(res.data);
         const quizs = res.data.quizzes;
         setQuizzes(quizs.reverse());
       } catch (error) {
@@ -51,71 +50,83 @@ const QuizzesPage = () => {
       <div className="sticky top-0 z-50">
         <Navbar />
       </div>
-      <div className="flex flex-col items-center min-h-screen px-5 py-10 bg-gray-50">
-        <section className="mb-10 text-center">
-          <h1 className="text-4xl font-bold text-gray-800">
-            Available Quizzes
-          </h1>
-          <p className="mt-2 text-lg text-gray-600">
-            Choose a quiz and put your knowledge to the test!
-          </p>
+      <div className="flex min-h-screen px-5 py-10 bg-gray-50">
+        
+        <section className="w-1/3 p-6 bg-white rounded-lg shadow-lg">
+          <h2 className="text-3xl font-bold text-gray-800">Guidelines</h2>
+          <ul className="mt-4 space-y-3 text-gray-600 list-disc list-inside">
+            <li>Ensure you are logged in before starting a quiz.</li>
+            <li>Each quiz has a time limit; complete it within the duration.</li>
+            <li>Click "View Score" to check your results for attempted quizzes.</li>
+            <li>Unattempted quizzes will allow you to start fresh.</li>
+            <li>Review your answers carefully before submitting the quiz.</li>
+          </ul>
         </section>
 
-        {loading ? (
-          <Loader />
-        ) : (
-          <div className="grid gap-10 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
-            {quizzes.length > 0 ? (
-              quizzes.map((quiz) => (
-                <div
-                  key={quiz._id}
-                  className="flex flex-col items-start w-full max-w-3xl p-10 text-gray-800 transition-transform duration-300 transform bg-gray-100 shadow-lg rounded-2xl hover:scale-105"
-                >
-                  <div className="flex items-center mb-6 space-x-4">
-                    <div className="flex items-center justify-center w-16 h-16 bg-gray-300 rounded-full">
-                      <FaUserAlt className="text-2xl text-gray-700" />
-                    </div>
-                    <div>
-                      <h3 className="text-3xl font-bold text-gray-900">
-                        {quiz.title}
-                      </h3>
-                      <p className="mt-1 text-sm text-gray-500">
-                        Category: {quiz.category || "General"}
-                      </p>
-                    </div>
-                  </div>
-                  <p className="mb-6 leading-relaxed text-gray-600">
-                    {quiz.description}
-                  </p>
-
-                  <div className="mb-6 text-sm text-gray-500">
-                    <p>
-                      <strong>Created by:</strong> {quiz.created_by}
-                    </p>
-                    <p>
-                      <strong>Date:</strong> {new Date().toLocaleDateString()}
-                    </p>
-                    <p>
-                      <strong>Questions:</strong> {quiz.questionCount} |{" "}
-                      <strong>Difficulty:</strong> {quiz.difficulty}
-                    </p>
-                  </div>
-
-                  <button
-                    className="w-full py-3 mt-auto font-semibold text-white transition duration-200 bg-blue-600 rounded-full hover:bg-blue-700"
-                    onClick={() => handleStartQuiz(quiz._id, quiz.attempted)}
-                  >
-                    {quiz.attempted ? "View Score" : "Start Quiz"}
-                  </button>
-                </div>
-              ))
+        {/* Available Quizzes Section */}
+        <section className="w-2/3 h-[80vh] px-16 overflow-y-auto">
+          <div className="max-w-full">
+            <h1 className="mb-6 text-4xl font-bold text-center text-gray-800">
+              Available Quizzes
+            </h1>
+            {loading ? (
+              <Loader />
             ) : (
-              <p className="text-lg text-gray-500">
-                No quizzes available at the moment.
-              </p>
+              <div className="flex flex-col gap-6">
+                {quizzes.length > 0 ? (
+                  quizzes.map((quiz) => (
+                    <div
+                      key={quiz._id}
+                      className="flex items-center px-4 py-3 transition-shadow bg-white rounded-lg shadow-lg hover:shadow-xl"
+                    >
+                      {/* Icon Section */}
+                      <div className="flex items-center justify-center w-24 h-24 bg-blue-100 rounded-lg shrink-0">
+                        <FaUserAlt className="text-3xl text-blue-600" />
+                      </div>
+
+                      {/* Content Section */}
+                      <div className="flex flex-col flex-grow px-6 space-y-2">
+                        <h3 className="text-2xl font-bold text-gray-800">
+                          {quiz.title}
+                        </h3>
+                        <p className="text-sm text-gray-600">
+                          {quiz.description}
+                        </p>
+                        <div className="text-sm text-gray-500">
+                          <p>
+                            <strong>Category:</strong> {quiz.category || "General"}
+                          </p>
+                          <p>
+                            <strong>Questions:</strong> {quiz.questionCount}
+                          </p>
+                          <p>
+                            <strong>Difficulty:</strong> {quiz.difficulty}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Action Section */}
+                      <div className="flex items-center">
+                        <button
+                          className="px-6 py-2 text-sm font-medium text-white bg-blue-600 rounded hover:bg-blue-700"
+                          onClick={() =>
+                            handleStartQuiz(quiz._id, quiz.attempted)
+                          }
+                        >
+                          {quiz.attempted ? "View Score" : "Start Quiz"}
+                        </button>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-lg text-gray-500">
+                    No quizzes available at the moment.
+                  </p>
+                )}
+              </div>
             )}
           </div>
-        )}
+        </section>
       </div>
     </>
   );
