@@ -23,7 +23,7 @@ const LoginCard = () => {
       if (role === "teacher") {
         navigate("/teacher-dashboard")
       } else if (role === "student") {
-        navigate("/student-dashboard")
+        navigate("/all-quizes")
       } 
     } catch (error) {
       console.error(
