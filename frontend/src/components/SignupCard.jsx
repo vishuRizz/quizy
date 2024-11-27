@@ -14,7 +14,7 @@ const SignupCard = () => {
     event.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post("http://127.0.0.1:5000/auth/register", {
+      const response = await axios.post("https://quizy-app.onrender.com/auth/register", {
         role,
         username,
         password,
