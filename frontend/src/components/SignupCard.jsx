@@ -28,7 +28,7 @@ const SignupCard = () => {
       if (userRole === "teacher") {
         navigate("/teacher-dashboard");
       } else if (userRole === "student") {
-        navigate("/student-dashboard");
+        navigate("/all-quizes");
       }
     } catch (error) {
       console.error("Login failed:", error.response ? error.response.data : error);
